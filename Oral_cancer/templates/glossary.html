@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Glossary{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-10 offset-md-1">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0">Genetic and Medical Terms Glossary</h3>
+            </div>
+            <div class="card-body">
+                <div class="accordion" id="glossaryAccordion">
+                    <!-- Cancer Basics -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#cancerBasics">
+                                Cancer Basics
+                            </button>
+                        </h2>
+                        <div id="cancerBasics" class="accordion-collapse collapse show">
+                            <div class="accordion-body">
+                                <dl>
+                                    <dt>Carcinoma</dt>
+                                    <dd>A type of cancer that starts in cells that make up the skin or the tissue lining organs, such as the mouth or throat.</dd>
+                                    
+                                    <dt>Metastasis</dt>
+                                    <dd>The spread of cancer cells from the place where they first formed to another part of the body.</dd>
+                                    
+                                    <dt>Biopsy</dt>
+                                    <dd>The removal of cells or tissues for examination by a pathologist to determine whether cancer is present.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Genetic Terms -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#geneticTerms">
+                                Genetic Terms
+                            </button>
+                        </h2>
+                        <div id="geneticTerms" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <dl>
+                                    <dt>DNA (Deoxyribonucleic Acid)</dt>
+                                    <dd>The molecule inside cells that carries genetic information and passes it from one generation to the next.</dd>
+                                    
+                                    <dt>Gene Mutation</dt>
+                                    <dd>A permanent change in the DNA sequence that makes up a gene. Mutations in certain genes can increase cancer risk.</dd>
+                                    
+                                    <dt>Tumor Suppressor Genes</dt>
+                                    <dd>Genes that help control cell growth. When they don't work properly, cells can grow out of control, which can lead to cancer.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Oral Cancer Specific -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#oralCancerTerms">
+                                Oral Cancer Terms
+                            </button>
+                        </h2>
+                        <div id="oralCancerTerms" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <dl>
+                                    <dt>Leukoplakia</dt>
+                                    <dd>White or gray patches in the mouth that can't be scraped off. These may become cancerous.</dd>
+                                    
+                                    <dt>Erythroplakia</dt>
+                                    <dd>Red patches in the mouth that can't be attributed to another cause. These have a high risk of becoming cancerous.</dd>
+                                    
+                                    <dt>Squamous Cell Carcinoma</dt>
+                                    <dd>The most common type of oral cancer, starting in the flat cells that cover the surfaces of the mouth, tongue, and lips.</dd>
+                                    
+                                    <dt>Buccal Mucosa</dt>
+                                    <dd>The inner lining of the cheeks and lips, which can be a site for oral cancer development.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Risk Factors -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#riskFactors">
+                                Risk Factors
+                            </button>
+                        </h2>
+                        <div id="riskFactors" class="accordion-collapse collapse">
+                            <div class="accordion-body">
+                                <dl>
+                                    <dt>HPV (Human Papillomavirus)</dt>
+                                    <dd>A virus that can cause cell changes that may lead to cancer, including oral cancer.</dd>
+                                    
+                                    <dt>Carcinogens</dt>
+                                    <dd>Substances that can cause cancer. Tobacco and alcohol are common carcinogens for oral cancer.</dd>
+                                    
+                                    <dt>Genetic Predisposition</dt>
+                                    <dd>An inherited increased likelihood of developing cancer based on genetic factors.</dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

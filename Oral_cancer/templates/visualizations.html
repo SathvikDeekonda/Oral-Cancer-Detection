@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+
+{% block title %}Gene Expression Visualizations{% endblock %}
+
+{% block extra_head %}
+<style>
+    .chart-container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    .info-panel {
+        background-color: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    .visualization-nav {
+        margin-bottom: 20px;
+    }
+    .visualization-nav .nav-link {
+        color: #2C3E50;
+        border: 1px solid #dee2e6;
+        margin-right: 10px;
+        border-radius: 20px;
+        padding: 8px 16px;
+    }
+    .visualization-nav .nav-link.active {
+        background-color: #2C3E50;
+        color: white;
+        border-color: #2C3E50;
+    }
+    .result-safe {
+        color: #27ae60;
+        font-weight: bold;
+    }
+    .result-warning {
+        color: #e74c3c;
+        font-weight: bold;
+    }
+    .safe-zone {
+        background-color: rgba(46, 204, 113, 0.1);
+        border: 1px dashed #27ae60;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+    .warning-zone {
+        background-color: rgba(231, 76, 60, 0.1);
+        border: 1px dashed #e74c3c;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center mb-4">Gene Expression Analysis</h1>
+    
+    <!-- Result Summary Panel -->
+    <div class="info-panel">
+        <h3>Analysis Results</h3>
+        <p>Prediction: 
+            {% if session.get('prediction') == 'Non-Cancerous' %}
+                <span class="result-safe">{{ session.get('prediction', 'N/A') }}</span>
+                <div class="safe-zone">
+                    <i class="fas fa-check-circle"></i> Your gene expression profile shows normal patterns.
+                    Regular check-ups are still recommended for preventive care.
+                </div>
+            {% else %}
+                <span class="result-warning">{{ session.get('prediction', 'N/A') }}</span>
+                <div class="warning-zone">
+                    <i class="fas fa-exclamation-triangle"></i> Further medical consultation is recommended.
+                </div>
+            {% endif %}
+        </p>
+        <p>Confidence Score: <strong>{{ session.get('confidence', 'N/A') }}</strong></p>
+    </div>
+
+    <!-- Navigation for different visualizations -->
+    <ul class="nav visualization-nav" id="vizTabs" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="feature-importance-tab" data-bs-toggle="tab" href="#featureImportance">Feature Importance</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="expression-levels-tab" data-bs-toggle="tab" href="#expressionLevels">Expression Levels</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="threshold-analysis-tab" data-bs-toggle="tab" href="#thresholdAnalysis">Threshold Analysis</a>
+        </li>
+    </ul>
+
+    <!-- Visualization content -->
+    <div class="tab-content" id="vizTabContent">
+        <!-- Feature Importance Chart -->
+        <div class="tab-pane fade show active" id="featureImportance">
+            <div class="chart-container">
+                <div id="importanceChart"></div>
+            </div>
+            <div class="info-panel">
+                <h4>About Feature Importance</h4>
+                <p>This chart shows the relative importance of each gene in the prediction model. Longer bars indicate genes that have a stronger influence on the prediction outcome.</p>
+                {% if session.get('prediction') == 'Non-Cancerous' %}
+                <div class="safe-zone">
+                    <p><strong>Normal Pattern:</strong> The gene expression levels are within expected ranges for healthy tissue.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Expression Levels Chart -->
+        <div class="tab-pane fade" id="expressionLevels">
+            <div class="chart-container">
+                <div id="expressionChart"></div>
+            </div>
+            <div class="info-panel">
+                <h4>About Expression Levels</h4>
+                <p>This visualization shows the expression levels of key genes in your sample compared to typical ranges in healthy and cancer samples.</p>
+                {% if session.get('prediction') == 'Non-Cancerous' %}
+                <div class="safe-zone">
+                    <p><strong>Normal Range:</strong> Your gene expression levels fall within the typical healthy range.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Threshold Analysis Chart -->
+        <div class="tab-pane fade" id="thresholdAnalysis">
+            <div class="chart-container">
+                <div id="thresholdChart"></div>
+            </div>
+            <div class="info-panel">
+                <h4>About Threshold Analysis</h4>
+                <p>This chart shows how your gene expression values compare to established thresholds for cancer prediction.</p>
+                {% if session.get('prediction') == 'Non-Cancerous' %}
+                <div class="safe-zone">
+                    <p><strong>Below Threshold:</strong> Expression levels are below critical thresholds associated with cancer risk.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Initialize data from Flask
+    const chartData = {
+        labels: {{ labels | tojson | safe }},
+        importanceValues: {{ values | tojson | safe }},
+        expressionValues: {{ expression_values | tojson | safe }}
+    };
+
+    const isNonCancerous = {{ 'true' if session.get('prediction') == 'Non-Cancerous' else 'false' }};
+
+    // Feature Importance Bar Chart
+    function createFeatureImportanceChart() {
+        const data = [{
+            type: 'bar',
+            x: chartData.importanceValues,
+            y: chartData.labels,
+            orientation: 'h',
+            marker: {
+                color: isNonCancerous ? '#27ae60' : '#2C3E50',
+                opacity: 0.8
+            }
+        }];
+
+        const layout = {
+            title: 'Gene Importance in Prediction',
+            xaxis: {
+                title: 'Importance Score'
+            },
+            yaxis: {
+                title: 'Gene',
+                automargin: true
+            },
+            height: 400,
+            margin: {
+                l: 150,
+                r: 50,
+                t: 50,
+                b: 50
+            }
+        };
+
+        Plotly.newPlot('importanceChart', data, layout, {responsive: true});
+    }
+
+    // Expression Levels Chart
+    function createExpressionLevelsChart() {
+        const data = [{
+            type: 'scatter',
+            mode: 'markers',
+            x: chartData.labels,
+            y: chartData.expressionValues,
+            marker: {
+                size: 12,
+                color: isNonCancerous ? '#27ae60' : '#2C3E50'
+            },
+            name: 'Your Sample'
+        }];
+
+        const layout = {
+            title: 'Gene Expression Levels',
+            xaxis: {
+                title: 'Genes',
+                tickangle: -45
+            },
+            yaxis: {
+                title: 'Expression Level'
+            },
+            height: 400
+        };
+
+        Plotly.newPlot('expressionChart', data, layout, {responsive: true});
+    }
+
+    // Threshold Analysis Chart
+    function createThresholdChart() {
+        const data = [{
+            type: 'scatter',
+            mode: 'lines+markers',
+            x: chartData.labels,
+            y: chartData.expressionValues,
+            name: 'Expression Level',
+            line: {
+                color: isNonCancerous ? '#27ae60' : '#2C3E50'
+            },
+            marker: {
+                size: 8,
+                color: isNonCancerous ? '#27ae60' : '#2C3E50'
+            }
+        }];
+
+        const layout = {
+            title: 'Expression Threshold Analysis',
+            xaxis: {
+                title: 'Genes',
+                tickangle: -45
+            },
+            yaxis: {
+                title: 'Expression Level'
+            },
+            height: 400,
+            shapes: [{
+                type: 'line',
+                x0: -0.5,
+                y0: 0.5,
+                x1: chartData.labels.length - 0.5,
+                y1: 0.5,
+                line: {
+                    color: '#e74c3c',
+                    width: 2,
+                    dash: 'dash'
+                }
+            }]
+        };
+
+        Plotly.newPlot('thresholdChart', data, layout, {responsive: true});
+    }
+
+    // Initialize all charts when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        createFeatureImportanceChart();
+        createExpressionLevelsChart();
+        createThresholdChart();
+    });
+
+    // Handle tab switching to properly resize charts
+    document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(tab => {
+        tab.addEventListener('shown.bs.tab', function (e) {
+            window.dispatchEvent(new Event('resize'));
+        });
+    });
+</script>
+{% endblock %} 

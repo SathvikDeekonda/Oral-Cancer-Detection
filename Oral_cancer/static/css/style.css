@@ -1,0 +1,154 @@
+/* Genetics Theme Colors */
+:root {
+    --dna-blue: #2C3E50;
+    --helix-green: #27AE60;
+    --gene-purple: #8E44AD;
+    --cell-gray: #95A5A6;
+    --nucleus-dark: #2C3E50;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background-color: #F8F9FA;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Main content wrapper */
+.container.mt-4 {
+    flex: 1 0 auto;
+}
+
+/* Navigation Bar */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.dna-icon {
+    font-size: 1.8rem;
+    margin-right: 0.5rem;
+}
+
+/* Cards */
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    background-color: var(--dna-blue);
+    color: white;
+}
+
+/* Form Elements */
+.form-control, .form-select {
+    border-radius: 8px;
+    border: 2px solid #E0E0E0;
+    padding: 10px 15px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--helix-green);
+    box-shadow: 0 0 0 0.2rem rgba(39, 174, 96, 0.25);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--helix-green);
+    border-color: var(--helix-green);
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #219a52;
+    border-color: #219a52;
+    transform: translateY(-1px);
+}
+
+/* Glossary Styling */
+dt {
+    color: var(--gene-purple);
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+dd {
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+    color: #555;
+}
+
+/* Accordion Styling */
+.accordion-button:not(.collapsed) {
+    background-color: var(--helix-green);
+    color: white;
+}
+
+.accordion-button:focus {
+    border-color: var(--helix-green);
+    box-shadow: 0 0 0 0.2rem rgba(39, 174, 96, 0.25);
+}
+
+/* Alert Styling */
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.alert-danger {
+    background-color: #FEEAEA;
+    color: #DC3545;
+}
+
+.alert-success {
+    background-color: #E8F5E9;
+    color: var(--helix-green);
+}
+
+/* Visualization Cards */
+.chart-container {
+    min-height: 400px;
+    padding: 20px;
+}
+
+/* Footer */
+.footer {
+    background-color: var(--nucleus-dark);
+    color: white;
+    padding: 20px 0;
+    flex-shrink: 0;
+    width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 15px;
+    }
+    
+    .navbar-brand {
+        font-size: 1.2rem;
+    }
+    
+    .dna-icon {
+        font-size: 1.5rem;
+    }
+} 
